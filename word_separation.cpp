@@ -23,7 +23,7 @@ bool *word_checker;
 
 int word_num = 0;
 int for_i =0;
-
+int word_length;
 int len_1;
 int len_2;
 int len_3;
@@ -36,7 +36,6 @@ bool same_word_checker()
     {
 	if(!strcmp(word[for_i], word[word_num]))
 	{
-	    //cout<<"What the Fxxx"<<endl;
 	    if( word_checker[for_i] == false )
 	    {
 		*(word_same_num + for_i) += 1;
@@ -80,6 +79,7 @@ void separation(char* strText,int mode)
 		    }
 		    else
 		    {
+			word_checker[word_num] = true;
 			word_num++;
 		    }
 		    strText += (len_1-1);
@@ -197,6 +197,9 @@ void separation(char* strText,int mode)
 
 int main()
 {
+    cout<<"length of the word?"<<endl;
+    cin>>word_length;
+    cout<<word_length<<endl;
     clock_t start, end, sub_start, sub_end;
     start = clock();
     word_same_num = (int*)malloc(sizeof(int)*SEPARATION_WORD_NUM);
@@ -234,7 +237,7 @@ int main()
 	num = word_num;
 //temp_code_end
 
-	separation(text_string, WORD_LENGTH_ONE);
+	separation(text_string, word_length);
 
 //temp_code_start	
 	sub_end = clock();
