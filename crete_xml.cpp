@@ -539,7 +539,7 @@ int main()
     //FILE *fp;
     //fp = fopen("/home/moon/Downloads/wiki_test/wiki_parser/test.csv","wn");
     ofstream fp;
-    fp.open("/home/moon/Downloads/wiki_test/wiki_parser/mini_test.xml");
+    fp.open("mini_test.xml");
 //    fp.open("/home/moon/Downloads/wiki_test/wiki_parser/mini_test.csv");
 //    fp.open("/home/moon/Downloads/wiki_test/wiki_parser/jp_test.csv");
 //    fp.open("/home/moon/Downloads/wiki_test/wiki_parser/en_test.csv");

@@ -137,7 +137,7 @@ void separation(char* strText,int mode)
 
 int main()
 {
-    clock_t start, end;
+    clock_t start, end, sub_start, sub_end;
     start = clock();
     word_same_num = (int*)malloc(sizeof(int)*SEPARATION_WORD_NUM);
     for( for_i = 0; for_i <= SEPARATION_WORD_NUM; for_i++)
@@ -150,6 +150,11 @@ int main()
     xml.LoadFile("mini_test.xml");
 
     XMLElement *pageElm = xml.FirstChildElement("page");
+
+//temp code_start
+    int n = 0;
+    int num = 0;
+//temp code end
     while( pageElm != NULL )
     {
 	char *title_string = (char*)(pageElm->FirstChildElement("title")->GetText());
@@ -160,9 +165,22 @@ int main()
 //	cout<<"Category : "<<category_string<<endl;
 //	cout<<"Text : "<<text_string<<endl;
 
+//temp code_start
+	cout<<"page num : "<<n<<endl;
+	cout<<"word num : "<<word_num<<endl;
+	sub_start = clock();	
+	num = word_num;
+//temp_code_end
+
 	separation(text_string, WORD_LENGTH_THREE);
 
+//temp_code_start	
+	sub_end = clock();
+	cout<<"plus word : " << word_num - num<<endl;
+	printf("end : %f(sec) \n\n",(float)(sub_end-sub_start)/(CLOCKS_PER_SEC));
+//temp_code_end
 	pageElm = (XMLElement *)(pageElm->NextSibling());
+	n += 1;
     }
     int i = 0;
     for( i = 0; i < word_num; i++)
@@ -171,6 +189,6 @@ int main()
     }
     end = clock();
     cout<<"Total : " << word_num<<endl;
-    printf("Run Time : %.3lf(sec) \n",(end-start)/(double)1000);
+    printf("Run Time : %.3lf(sec) \n",(float)(end-start)/(CLOCKS_PER_SEC));
     return 0;
 }
