@@ -19,6 +19,8 @@ using namespace tinyxml2;
 
 char *word[SEPARATION_WORD_NUM];
 int *word_same_num;
+bool *word_checker;
+
 int word_num = 0;
 int for_i =0;
 
@@ -35,7 +37,11 @@ bool same_word_checker()
 	if(!strcmp(word[for_i], word[word_num]))
 	{
 	    //cout<<"What the Fxxx"<<endl;
-	    *(word_same_num + for_i) += 1;
+	    if( word_checker[for_i] == false )
+	    {
+		*(word_same_num + for_i) += 1;
+		word_checker[for_i] = true;
+	    }
 	    return true;
 	}
     }
@@ -194,8 +200,10 @@ int main()
     clock_t start, end, sub_start, sub_end;
     start = clock();
     word_same_num = (int*)malloc(sizeof(int)*SEPARATION_WORD_NUM);
+    word_checker = (bool*)malloc(sizeof(bool)*SEPARATION_WORD_NUM);
     for( for_i = 0; for_i <= SEPARATION_WORD_NUM; for_i++)
     {
+	*(word_checker+for_i) = false;
 	*(word_same_num+for_i) = 1;
     }
     setlocale( LC_CTYPE, "" );
@@ -220,21 +228,25 @@ int main()
 //	cout<<"Text : "<<text_string<<endl;
 
 //temp code_start
-	cout<<"page num : "<<n<<endl;
-	cout<<"word num : "<<word_num<<endl;
+//	cout<<"page num : "<<n<<endl;
+//	cout<<"word num : "<<word_num<<endl;
 	sub_start = clock();	
 	num = word_num;
 //temp_code_end
 
-	separation(text_string, WORD_LENGTH_FIVE);
+	separation(text_string, WORD_LENGTH_ONE);
 
 //temp_code_start	
 	sub_end = clock();
-	cout<<"plus word : " << word_num - num<<endl;
-	printf("end : %f(sec) \n\n",(float)(sub_end-sub_start)/(CLOCKS_PER_SEC));
+//	cout<<"plus word : " << word_num - num<<endl;
+//	printf("end : %f(sec) \n\n",(float)(sub_end-sub_start)/(CLOCKS_PER_SEC));
 //temp_code_end
 	pageElm = (XMLElement *)(pageElm->NextSibling());
 	n += 1;
+	for( for_i = 0; for_i <= SEPARATION_WORD_NUM; for_i++)
+	{
+	    *(word_checker+for_i) = false;
+	}
     }
     int i = 0;
     for( i = 0; i < word_num; i++)
