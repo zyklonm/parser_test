@@ -103,6 +103,7 @@ void separation(char* strText,int mode)
 			}
 			else
 			{
+			    word_checker[word_num] = true;
 			    word_num++;
 			}
 			strText += (len_1-1);
@@ -128,6 +129,7 @@ void separation(char* strText,int mode)
 			}
 			else
 			{
+			    word_checker[word_num] = true;
 			    word_num++;
 			}
 
@@ -154,6 +156,7 @@ void separation(char* strText,int mode)
 			}
 			else
 			{
+			    word_checker[word_num] = true;
 			    word_num++;
 			}
 
@@ -180,6 +183,7 @@ void separation(char* strText,int mode)
 			}
 			else
 			{
+			    word_checker[word_num] = true;
 			    word_num++;
 			}
 
@@ -189,7 +193,10 @@ void separation(char* strText,int mode)
 		}
 
 		default:
+		{
+		    cout<<"Do not Support length of word : " <<mode<<endl;
 		    break;
+		}
 	    }
 	}
     }
@@ -197,9 +204,11 @@ void separation(char* strText,int mode)
 
 int main()
 {
-    cout<<"length of the word?"<<endl;
-    cin>>word_length;
-    cout<<word_length<<endl;
+    do
+    {
+	cout<<"length of the word?"<<endl;
+	cin>>word_length;
+    }while(word_length == 0 || word_length > WORD_LENGTH_FIVE);
     clock_t start, end, sub_start, sub_end;
     start = clock();
     word_same_num = (int*)malloc(sizeof(int)*SEPARATION_WORD_NUM);
