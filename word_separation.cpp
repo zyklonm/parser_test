@@ -103,6 +103,7 @@ void separation(char* strText,int mode)
 		    }
 		    break;
 		}
+
 		case WORD_LENGTH_THREE:
 		{
 		    if( len_2 > 1 && len_3 > 1)
@@ -128,6 +129,59 @@ void separation(char* strText,int mode)
 		    }
 		    break;
 		}
+
+		case WORD_LENGTH_FOUR:
+		{
+		    if( len_2 > 1 && len_3 > 1 && len_4 > 1)
+		    {
+			word[word_num] = (char*)malloc(sizeof(char)*(len_1+len_2+len_3+len_4));
+			for( for_i = 0; for_i < (len_1+len_2+len_3+len_4); for_i++)
+			{
+			    *((*(word + word_num)) + for_i) = strText[for_i];
+			}
+
+			*((*(word+word_num))+len_1+len_2+len_3+len_4) = '\0';
+
+			if(same_word_checker())
+			{
+			    free(word[word_num]);
+			}
+			else
+			{
+			    word_num++;
+			}
+
+			strText += (len_1 - 1);
+		    }
+		    break;
+		}
+
+		case WORD_LENGTH_FIVE:
+		{
+		    if( len_2 > 1 && len_3 > 1 && len_4 > 1 && len_5 >1 )
+		    {
+			word[word_num] = (char*)malloc(sizeof(char)*(len_1+len_2+len_3+len_4+len_5));
+			for( for_i = 0; for_i < (len_1+len_2+len_3+len_4+len_5); for_i++)
+			{
+			    *((*(word + word_num)) + for_i) = strText[for_i];
+			}
+
+			*((*(word+word_num))+len_1+len_2+len_3+len_4+len_5) = '\0';
+
+			if(same_word_checker())
+			{
+			    free(word[word_num]);
+			}
+			else
+			{
+			    word_num++;
+			}
+
+			strText += (len_1 - 1);
+		    }
+		    break;
+		}
+
 		default:
 		    break;
 	    }
@@ -172,7 +226,7 @@ int main()
 	num = word_num;
 //temp_code_end
 
-	separation(text_string, WORD_LENGTH_THREE);
+	separation(text_string, WORD_LENGTH_FIVE);
 
 //temp_code_start	
 	sub_end = clock();
