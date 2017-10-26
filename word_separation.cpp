@@ -30,6 +30,23 @@ int len_3;
 int len_4;
 int len_5;
 
+int compare(const void *first, const void* second)
+{
+    int num1 = *(int *)first;
+    int num2 = *(int *)second;
+
+    if( num1 < num2)
+    {
+	return -1;
+    }
+    else if ( num1 > num2 )
+    {
+	return 1;
+    }
+    else
+	return 0;
+}
+
 bool same_word_checker()
 {
     for( for_i = 0; for_i < word_num; for_i++ )
@@ -209,8 +226,10 @@ int main()
 	cout<<"length of the word?"<<endl;
 	cin>>word_length;
     }while(word_length == 0 || word_length > WORD_LENGTH_FIVE);
+    
     clock_t start, end, sub_start, sub_end;
     start = clock();
+    
     word_same_num = (int*)malloc(sizeof(int)*SEPARATION_WORD_NUM);
     word_checker = (bool*)malloc(sizeof(bool)*SEPARATION_WORD_NUM);
     for( for_i = 0; for_i <= SEPARATION_WORD_NUM; for_i++)
@@ -218,6 +237,7 @@ int main()
 	*(word_checker+for_i) = false;
 	*(word_same_num+for_i) = 1;
     }
+    
     setlocale( LC_CTYPE, "" );
 
     XMLDocument xml;
@@ -268,5 +288,12 @@ int main()
     end = clock();
     cout<<"Total : " << word_num<<endl;
     printf("Run Time : %.3lf(sec) \n",(float)(end-start)/(CLOCKS_PER_SEC));
+    
+    qsort(word_same_num, word_num, sizeof(int), compare);
+    
+    for( i = 0 ; i < word_num; i++ )
+    {
+	cout<<word_same_num[i]<<endl;
+    }
     return 0;
 }
