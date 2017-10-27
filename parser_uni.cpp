@@ -2,9 +2,9 @@
 #include    <fstream>
 #include    <string>
 #include    <stdio.h>
-#include <stdlib.h>
+#include    <stdlib.h>
 #include    <locale.h>
-#include"/home/moon/Downloads/wiki_test/wiki_parser/tinyxml2/tinyxml2.h"
+#include    "tinyxml2/tinyxml2.h"
 
 #define category_len 11
 #define TEXT_MAX_LENGTH 2000
@@ -399,6 +399,12 @@ void string_cutoff(char *strText)
 	    }
 	}
 
+	if( word_checker )
+	{
+	    strText =-1;
+	    continue;
+	}
+
 	if(*strText == '*' ||
 	   *strText == '=' ||
 	   *strText == '\'' ||
@@ -409,12 +415,6 @@ void string_cutoff(char *strText)
 	   *strText == ';' ||
 	   *strText == '\x5C')
 	{
-	    continue;
-	}
-
-	if( word_checker )
-	{
-	    strText-=1;
 	    continue;
 	}
 	else
@@ -430,6 +430,7 @@ void string_cutoff(char *strText)
 		else
 		{
 		    int unicode_num = 0;
+
 		    for( unicode_num = 0; unicode_num < len; unicode_num ++)
 		    {
 			*(modify_text + modify_text_num) = *strText;
@@ -535,11 +536,11 @@ int main()
     XMLElement *textElm = NULL;
     const XMLAttribute *textAttr = NULL;
     //FILE *fp;
-    //fp = fopen("/home/moon/Downloads/wiki_test/wiki_parser/test.csv","wn");
+    //fp = fopen("test.csv","wn");
     ofstream fp;
-    fp.open("/home/moon/Downloads/wiki_test/wiki_parser/mini_test.csv");
-//    fp.open("/home/moon/Downloads/wiki_test/wiki_parser/jp_test.csv");
-//    fp.open("/home/moon/Downloads/wiki_test/wiki_parser/en_test.csv");
+    fp.open("mini_test.csv");
+//    fp.open("jp_test.csv");
+//    fp.open("en_test.csv");
     const char *bom = "\xEF\xBB\xBF";
     fp << bom;
     
