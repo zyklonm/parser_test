@@ -74,7 +74,7 @@ void parsing_category(char *strText)
 	    }
 	    else
 	    {
-		if( *strText != ',' )
+		if( *strText != ',' && *strText != '\x5C')
 		{
 		    int len = mblen(&strText[0], MB_CUR_MAX);
 		    if( len > 1 )
@@ -117,6 +117,9 @@ int parser_brace(char *strText)
     int jump_text_num = 0;
     while( check_brace )
     {
+
+	if( *(strText + jump_text_num) == '\0' )
+		return -1;
 	if( *(strText + jump_text_num) == '{' )
 	{
 	    brace_num+=1;
@@ -429,7 +432,7 @@ void string_cutoff(char *strText)
 
 	if( word_checker )
 	{
-	    strText =-1;
+	    strText-=1;
 	    continue;
 	}
 
@@ -558,9 +561,9 @@ int main()
     using namespace tinyxml2;
     XMLDocument xml;
 
-    xml.LoadFile("wiki_split_aa.xml");
-//    xml.LoadFile("enwiki01.xml");
-//    xml.LoadFile("jawiki01.xml");
+//    xml.LoadFile("wiki_split_aa.xml");
+//    xml.LoadFile("enwiki.xml");
+    xml.LoadFile("jawiki.xml");
 /*
     XMLElement *elem = xml.FirstChildElement("page")->FirstChildElement("title");
     std::cout<<elem->GetText()<<std::endl;
@@ -572,13 +575,16 @@ int main()
     //FILE *fp;
     //fp = fopen("test.csv","wn");
     ofstream fp;
-    fp.open("mini_test.csv");
-//    fp.open("jp_test.csv");
-//    fp.open("en_test.csv");
+    ofstream xml_fp;
+//    fp.open("en_wiki.csv");
+    fp.open("jp_wiki.csv");
     const char *bom = "\xEF\xBB\xBF";
     fp << bom;
     
-    //fp << "\xEF\xBB\xBF"; 
+    //fp << "\xEF\xBB\xBF";
+//    xml_fp.open("en_wiki.xml");
+    xml_fp.open("jp_wiki.xml");
+    xml_fp << bom; 
     int i = 0;
     int number =1;
     while( pageElm != NULL )
@@ -591,6 +597,7 @@ int main()
 	   for( ; *strTitle != '\0'; strTitle++ )
 	   {
 	       if( *strTitle == ',' ||
+	   	   *strTitle == '\x5C' ||
 		   *strTitle == ';' )
 		   *strTitle ='|';
 	       n_title +=1;
@@ -617,6 +624,7 @@ int main()
 	   number+=1;
 	  // fprintf(fp,"%s, %s",strTitle, modify_text);
 	   fp<<strTitle<<","<<category_text<<","<<modify_text<<endl;
+	   xml_fp<<"<page>"<<endl<<"<title>"<<strTitle<<"</title>"<<endl<<"<category>"<<category_text<<"</category>"<<endl<<"<text>"<<modify_text<<"</text>"<<endl<<"</page>"<<endl;
 	   i+=1;
 //	   cout<<strlen(modify_text)<<endl;
 	   free(modify_text);
@@ -626,6 +634,7 @@ int main()
     }
     //fclose(fp);
     fp.close();
+    xml_fp.close();
     return 1;
 
 }
