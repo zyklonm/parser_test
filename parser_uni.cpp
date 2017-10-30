@@ -16,6 +16,7 @@ char *word_separation_text[100];
 int *word_separation_length;
 
 int word_separation_max = 0;
+int modify_text_num = 0;
 using namespace std;
 
 
@@ -150,6 +151,8 @@ int parser_html_math(char *strText)
 	html_math_total_num += 5;
 	while( checker_html_math )
 	{
+	    if( *(strText+html_math_total_num+0) == '\0' )
+		return -1;
 	    if( *(strText+html_math_total_num+0) == '<' &&
 		*(strText+html_math_total_num+1) == '/' &&
 		*(strText+html_math_total_num+2) == 'm' &&
@@ -186,6 +189,8 @@ int parser_html_font(char *strText)
 	html_font_total_num += 5;
 	while( checker_html_font )
 	{
+	    if( *(strText + html_font_total_num + 0 ) == '\0' )
+		return -1;
 	    if( *(strText + html_font_total_num + 0 ) == '<' &&
 		*(strText + html_font_total_num + 1 ) == '/' &&
 		*(strText + html_font_total_num + 2 ) == 'f' &&
@@ -218,6 +223,8 @@ int parser_html_ref(char *strText)
 	html_ref_total_num += 4;
 	while( checker_html_ref )
 	{
+	    if (*(strText + html_ref_total_num ) == '\0' )
+		return -1;
 	    if (*(strText + html_ref_total_num ) == '>' )
 	    {
 		html_ref_total_num += 1;
@@ -251,6 +258,8 @@ int parser_html_category(char* strText)
 	html_category_num += 11;
 	while( checker_html_category )
 	{
+	    if( *(strText + html_category_num + 0 ) == '\0' )
+		return -1;
 	    if( *(strText + html_category_num + 0 ) == ']' &&
 		*(strText + html_category_num + 1 ) == ']' )
 	    {
@@ -287,6 +296,8 @@ int parser_html_div(char * strText)
 	html_div_total_num += 4;
 	while ( checker_html_div )
 	{
+	    if( *(strText + html_div_total_num ) == '\0' )
+		return -1;
 	    if( *(strText + html_div_total_num ) == '>' )
 	    {
 		html_div_total_num += 1;
@@ -306,7 +317,7 @@ void string_cutoff(char *strText)
 {
 //    setlocale( LC_CTYPE, "" );
 //    setlocale( LC_ALL, "en_US.utf8" );
-    int modify_text_num = 0;
+    modify_text_num = 0;
     modify_text = (char*)malloc(sizeof(char)*TEXT_MAX_LENGTH);
     for(modify_text_num = 0; modify_text_num <= TEXT_MAX_LENGTH; modify_text_num++)
     {
@@ -331,12 +342,21 @@ void string_cutoff(char *strText)
 	while( *strText =='{' )
 	{
 	    jump_num = parser_brace(strText);
+	    if( jump_num == -1 )
+	    {
+		return;
+	    }
 	    strText+=jump_num;
 	    word_checker = true;
 	}
 
 	//check to html_math func
 	jump_num = parser_html_math(strText);
+	if( jump_num == -1 )
+	{
+	    return;
+	}
+
 	strText+=jump_num;
 	if( jump_num > 0 )
 	{
@@ -345,7 +365,9 @@ void string_cutoff(char *strText)
 	
 	//check to html_font func
         jump_num = parser_html_font(strText);
-        strText+=jump_num;
+        if( jump_num == -1 )
+	    return ;
+	strText+=jump_num;
 	if( jump_num > 0 )
 	{
 	    word_checker = true;
@@ -353,13 +375,17 @@ void string_cutoff(char *strText)
 
 	//check to html_ref func
         jump_num = parser_html_ref(strText);
-        strText+=jump_num;
+        if( jump_num == -1 )
+	    return ;
+	strText+=jump_num;
 	if( jump_num > 0 )
 	{
 	    word_checker = true;
 	}
 
 	jump_num = parser_html_category(strText);
+	if( jump_num == -1 ) 
+	    return;
 	strText+=jump_num;
 	if( jump_num > 0 )
 	{
@@ -367,6 +393,8 @@ void string_cutoff(char *strText)
 	}
 
 	jump_num = parser_html_div(strText);
+	if( jump_num == -1 )
+	    return;
 	strText += jump_num;
 	if( jump_num > 0 )
 	{
@@ -413,6 +441,8 @@ void string_cutoff(char *strText)
 	   *strText == '\n' ||
 	   *strText == ',' ||
 	   *strText == ';' ||
+	   *strText == '<' ||
+	   *strText == '>' ||
 	   *strText == '\x5C')
 	{
 	    continue;
@@ -462,6 +492,10 @@ void string_parser(char *strText)
     delete_enter(strText);
     parsing_category(strText);
     string_cutoff(strText);
+    if( modify_text_num == 0 )
+    {
+	*modify_text = '|';
+    }
 }
 
 void separation_word()
