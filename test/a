@@ -1,1 +1,74 @@
-a
+use 9.3
+
+DBNAME=""
+PORT=5432
+
+function usage()
+{
+    echo "Usage"
+    echo "./bench.sh -s | -c| -S [-b before sqlfile] [-a after_sqlfile] [-w]"
+    echo "  -s SQL_FILE     : SQL file"
+    echo "  -c COMMAND      : shell command (e.g. pgbench)"
+    echo "  -S SHELL_FILE   : shell script file"
+    echo "  -b SQL_FIEL     : before sql file"
+    echo "  -a SQL_FILE     : after sql file"
+    echo "  -w              : keep record LSN during benchmarking (interval 1s)"
+    echo "  -n NUM          : Number of trials"
+    echo "  -d DBNAME       : Databse name"
+    echo "  -o PREFIX       : prefix of output file"
+    echo "  -h              : Show usage"
+}
+
+#Default values
+output_file=""
+before_script=before.sql
+after_script=after.sql
+while getopts s:S:b:a:wo:c:Hn:d: OPT
+do
+    case $OPT in
+        s)
+            sql=$OPTARG
+            ;;
+    esac
+done
+
+if [ "$sql" == "" -a "$command" == ""];then
+    exit 1
+fi
+
+
+PSQL="psql -d $..."
+output_file=${output_file}_`date + "%Y%m%d_%H%M"`
+
+for i int `seq ` $N`
+do
+    pg_ctl stop -w
+    su -c "echo 3 > /proc/sys/vm/drop_cache"
+    pg_ctl start  -w
+
+    if[ "$before" != ""];then
+        $PSQL -f $before >> $ result.txt
+    fi
+
+    if[ "$wal_check" == 1]; then
+        {while true
+            do
+                lsn=`psql -Atqc "SELECT pg_current_xlog_location()"`
+                if [ "$start_lsn" ==""];then
+                    start_lsn=$lsn
+                fi
+                if ["$prev_lsn" !=""];then
+                    psql -F "," -Atqc "SELECT '$lsn', pg_xlog_location_diff('$lsn','$prev_lsn'), pg_xlog_location_diff('$lsn', $'start_lsn')" >> $result.wal
+                fi
+                prev_lsn=$lsn
+                sleep 5
+            done
+        } &
+        wal_check_pid=$!
+    fi
+
+    if ["$wal_check" == 1];then
+        kill -9 $wal_check_pid
+    fi
+
+    trap "kill -
